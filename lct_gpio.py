@@ -39,7 +39,10 @@ def close_pin(pin_number):
         :type pin_number: int
         :rtype None
     """
-    os.system(f'echo {pin_map[pin_number]} | sudo tee > /sys/class/gpio/unexport')
+    result = os.popen(f'echo {pin_map[pin_number]} | sudo tee > /sys/class/gpio/unexport')
+
+    if result and 'Permission denied' in result:
+        return Exception('Error: Permission denied')
 
 
 def open_pin(pin_number):
@@ -51,8 +54,11 @@ def open_pin(pin_number):
     result = os.popen(f'echo {pin_map[pin_number]} | sudo tee > /sys/class/gpio/export').read()
 
     if result:
-        close_pin(pin_number)
-        open_pin(pin_number)
+        if 'Permission denied' in result:
+            return Exception('Error: Permission denied')
+        else:
+            close_pin(pin_number)
+            open_pin(pin_number)
 
 
 def set_input(pin_number):
@@ -61,7 +67,10 @@ def set_input(pin_number):
         :type pin_number: int
         :rtype None
     """
-    os.system(f'echo in | sudo tee > /sys/class/gpio/gpio{pin_map[pin_number]}/direction')
+    result = os.popen(f'echo in | sudo tee > /sys/class/gpio/gpio{pin_map[pin_number]}/direction')
+
+    if result and 'Permission denied' in result:
+        return Exception('Error: Permission denied')
 
 
 def set_output(pin_number):
@@ -70,7 +79,10 @@ def set_output(pin_number):
         :type pin_number: int
         :rtype None
     """
-    os.system(f'echo out | sudo tee > /sys/class/gpio/gpio{pin_map[pin_number]}/direction')
+    result = os.popen(f'echo out | sudo tee > /sys/class/gpio/gpio{pin_map[pin_number]}/direction')
+
+    if result and 'Permission denied' in result:
+        return Exception('Error: Permission denied')
 
 
 def set_val(pin_number, val):
@@ -81,7 +93,10 @@ def set_val(pin_number, val):
         :type val: int
         :rtype None
     """
-    os.system(f'echo {val} | sudo tee > /sys/class/gpio/gpio{pin_map[pin_number]}/value')
+    result = os.popen(f'echo {val} | sudo tee > /sys/class/gpio/gpio{pin_map[pin_number]}/value')
+
+    if result and 'Permission denied' in result:
+        return Exception('Error: Permission denied')
 
 
 def get_val(pin_number):
@@ -90,4 +105,7 @@ def get_val(pin_number):
         :type pin_number: int
         :rtype None
     """
-    os.system(f'cat /sys/class/gpio/gpio{pin_map[pin_number]}/value')
+    result = os.popen(f'cat /sys/class/gpio/gpio{pin_map[pin_number]}/value')
+
+    if result and 'Permission denied' in result:
+        return Exception('Error: Permission denied')
