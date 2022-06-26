@@ -1,7 +1,7 @@
 # lctgpio
 Package for controlling GPIO pins on Libre Computer Tritium.
 
-This package was built specifically for the Libre Computer Tritium. Please see here for additional documentation on the Tritium: https://libre.computer/products/h3/.
+This package was built specifically for the Libre Computer Tritium. See here for additional documentation on the Tritium: https://libre.computer/products/h3/.
 
 Includes commands for the following:
 * Open and close GPIO pins
