@@ -37,52 +37,40 @@ def close_pin(pin_number):
     """Closes the specified pin number.
         :param pin_number: Pin number specified by Libre Computer diagram.
         :type pin_number: int
-        :rtype None
+        :rtype: None
     """
-    result = os.popen(f'echo {pin_map[pin_number]} | sudo tee > /sys/class/gpio/unexport')
-
-    if result and 'Permission denied' in result:
-        return Exception('Error: Permission denied')
+    os.system(f'echo {pin_map[pin_number]} | sudo tee > /sys/class/gpio/unexport')
 
 
 def open_pin(pin_number):
     """Opens the specified pin number.
         :param pin_number: Pin number specified by Libre Computer diagram.
         :type pin_number: int
-        :rtype None
+        :rtype: None
     """
     result = os.popen(f'echo {pin_map[pin_number]} | sudo tee > /sys/class/gpio/export').read()
 
     if result:
-        if 'Permission denied' in result:
-            return Exception('Error: Permission denied')
-        else:
-            close_pin(pin_number)
-            open_pin(pin_number)
+        close_pin(pin_number)
+        open_pin(pin_number)
 
 
 def set_input(pin_number):
     """Sets pin as input.
         :param pin_number: Pin number specified by Libre Computer diagram.
         :type pin_number: int
-        :rtype None
+        :rtype: None
     """
-    result = os.popen(f'echo in | sudo tee > /sys/class/gpio/gpio{pin_map[pin_number]}/direction')
-
-    if result and 'Permission denied' in result:
-        return Exception('Error: Permission denied')
+    os.system(f'echo in | sudo tee > /sys/class/gpio/gpio{pin_map[pin_number]}/direction')
 
 
 def set_output(pin_number):
     """Sets pin as output.
         :param pin_number: Pin number specified by Libre Computer diagram.
         :type pin_number: int
-        :rtype None
+        :rtype: None
     """
-    result = os.popen(f'echo out | sudo tee > /sys/class/gpio/gpio{pin_map[pin_number]}/direction')
-
-    if result and 'Permission denied' in result:
-        return Exception('Error: Permission denied')
+    os.system(f'echo out | sudo tee > /sys/class/gpio/gpio{pin_map[pin_number]}/direction')
 
 
 def set_val(pin_number, val):
@@ -91,21 +79,21 @@ def set_val(pin_number, val):
         :type pin_number: int
         :param val: Desired value of the specified pin.
         :type val: int
-        :rtype None
+        :rtype: None
     """
-    result = os.popen(f'echo {val} | sudo tee > /sys/class/gpio/gpio{pin_map[pin_number]}/value')
-
-    if result and 'Permission denied' in result:
-        return Exception('Error: Permission denied')
+    result = os.system(f'echo {val} | sudo tee > /sys/class/gpio/gpio{pin_map[pin_number]}/value')
 
 
 def get_val(pin_number):
     """Gets value of pin.
         :param pin_number: Pin number specified by Libre Computer diagram.
         :type pin_number: int
-        :rtype None
+        :return: Value of pin.
+        :rtype: int
     """
-    result = os.popen(f'cat /sys/class/gpio/gpio{pin_map[pin_number]}/value')
-
-    if result and 'Permission denied' in result:
-        return Exception('Error: Permission denied')
+    result = os.system(f'cat /sys/class/gpio/gpio{pin_map[pin_number]}/value')
+    
+    try:
+        return int(result)
+    except:
+        return None
