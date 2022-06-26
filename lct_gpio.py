@@ -33,15 +33,6 @@ pin_map = {
 }
 
 
-def open_pin(pin_number):
-    """Opens the specified pin number.
-        :param pin_number: Pin number specified by Libre Computer diagram.
-        :type pin_number: int
-        :rtype None
-    """
-    os.system(f'echo {pin_map[pin_number]} | sudo tee > /sys/class/gpio/export')
-
-
 def close_pin(pin_number):
     """Closes the specified pin number.
         :param pin_number: Pin number specified by Libre Computer diagram.
@@ -49,6 +40,19 @@ def close_pin(pin_number):
         :rtype None
     """
     os.system(f'echo {pin_map[pin_number]} | sudo tee > /sys/class/gpio/unexport')
+
+
+def open_pin(pin_number):
+    """Opens the specified pin number.
+        :param pin_number: Pin number specified by Libre Computer diagram.
+        :type pin_number: int
+        :rtype None
+    """
+    result = os.popen(f'echo {pin_map[pin_number]} | sudo tee > /sys/class/gpio/export').read()
+
+    if result:
+        close_pin(pin_number)
+        open_pin(pin_number)
 
 
 def set_input(pin_number):
