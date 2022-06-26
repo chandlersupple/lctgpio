@@ -89,11 +89,11 @@ def get_val(pin_number):
         :param pin_number: Pin number specified by Libre Computer diagram.
         :type pin_number: int
         :return: Value of pin.
-        :rtype: int
+        :rtype: float
     """
     result = os.system(f'cat /sys/class/gpio/gpio{pin_map[pin_number]}/value')
     
     try:
-        return int(result)
+        return result
     except:
         return None
